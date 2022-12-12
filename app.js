@@ -5,7 +5,7 @@ var path       = require('path');
 var XLSX       = require('xlsx');
 var multer     = require('multer');
 var userModel=require('./models/userModel')
-var each = require('async-each-series');
+var eachSeries = require('async-each-series');
 var async=require('async')
 
   //connecting to database
@@ -57,7 +57,7 @@ app.post('/',upload.single('excel'),(req,res)=>{
   var x=0;
   sheet_namelist.forEach(element => {
       var xlData = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_namelist[x]]);
-    each(xlData,function(data,next){
+    async.eachSeries(xlData,function(data,next){
         setTimeout(function () {
             userModel.find({email:data.email})
             .then(res=>{
